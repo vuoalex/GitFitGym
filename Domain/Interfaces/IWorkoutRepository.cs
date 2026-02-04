@@ -6,6 +6,6 @@ public interface IWorkoutRepository
 {
     Task<List<Workout>> GetAllAsync();
     Task<Workout?> GetByIdAsync(int id);
-    Task CreateAsync(Workout workout);
+    Task<Workout> CreateAsync(string name);
     Task DeleteAsync(int id);
 }
