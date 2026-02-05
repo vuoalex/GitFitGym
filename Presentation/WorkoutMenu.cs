@@ -29,22 +29,22 @@ public class WorkoutMenu(Gym gym)
             switch (input)
             {
                 case "1":
-                    //await ViewAllWorkoutsAsync();
+                    await ViewAllWorkoutsAsync();
                     break;
                 case "2":
-                    //await ViewWorkoutAsync();
+                    await ViewWorkoutAsync();
                     break;
                 case "3":
-                    //await CreateWorkoutAsync();
+                    await CreateWorkoutAsync();
                     break;
                 case "4":
-                    //await AddExerciseToWorkoutAsync();
+                    await AddExerciseToWorkoutAsync();
                     break;
                 case "5":
-                    //await RemoveExerciseFromWorkoutAsync();
+                    await RemoveExerciseFromWorkoutAsync();
                     break;
                 case "6":
-                    //await DeleteWorkoutAsync();
+                    await DeleteWorkoutAsync();
                     break;
                 case "0":
                     return;
