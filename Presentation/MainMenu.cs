@@ -37,7 +37,7 @@ public class MainMenu(Gym gym)
                     await new MembershipPlanMenu(_gym).ShowAsync();
                     break;
                 case "4":
-                    // Workout menu
+                    await new WorkoutMenu(_gym).ShowAsync();
                     break;
                 case "5":
                     // Exercise menu
