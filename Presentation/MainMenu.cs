@@ -1,7 +1,11 @@
+using GitFitGym.Domain;
+
 namespace GitFitGym.Presentation;
 
-public class MainMenu
+public class MainMenu(Gym gym)
 {
+    private readonly Gym _gym = gym;
+
     public async Task ShowAsync()
     {
         while (true)
@@ -24,7 +28,7 @@ public class MainMenu
             switch (input)
             {
                 case "1":
-                    // Member menu
+                    await new MemberMenu(_gym).ShowAsync();
                     break;
                 case "2":
                     // Trainer menu
@@ -42,9 +46,17 @@ public class MainMenu
                     Console.WriteLine("\nGoodbye!");
                     return;
                 default:
-                    Console.WriteLine("\nInvalid option. Press any key . . .");
+                    Console.WriteLine("Invalid option, try again. ");
+                    Pause();
                     break;
             }
         }
+    }
+
+    // TODO: Move to helper class
+    public static void Pause()
+    {
+        Console.WriteLine("\nPress any key to continue. . .");
+        Console.ReadKey();
     }
 }
