@@ -31,7 +31,7 @@ public class MainMenu(Gym gym)
                     await new MemberMenu(_gym).ShowAsync();
                     break;
                 case "2":
-                    // Trainer menu
+                    await new TrainerMenu(_gym).ShowAsync();
                     break;
                 case "3":
                     // Membership Plan menu
