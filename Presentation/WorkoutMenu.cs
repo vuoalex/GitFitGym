@@ -91,7 +91,7 @@ public class WorkoutMenu(Gym gym)
             return;
         }
 
-        var workout = await _gym.GetWorkoutByIdAsync(id);
+        var workout = await _gym.GetWorkoutWithExercisesAsync(id);
 
         if (workout is null)
         {
@@ -102,8 +102,18 @@ public class WorkoutMenu(Gym gym)
             Console.WriteLine($"\nID: {workout.Id}");
             Console.WriteLine($"Name: {workout.Name}");
 
-            // TODO: Show exercises with Include()
-            //Console.WriteLine("");
+            Console.WriteLine("\nExercises:");
+            if (workout.WorkoutExercises.Count == 0)
+            {
+                Console.WriteLine("No exercises in this workout.");
+            }
+            else
+            {
+                foreach (var we in workout.WorkoutExercises)
+                {
+                    Console.WriteLine($"- {we.Exercise?.Name ?? "Unknown"} | {we.Sets} sets x {we.Reps} reps");
+                }
+            }
         }
 
         MainMenu.Pause();

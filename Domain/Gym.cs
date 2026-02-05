@@ -91,6 +91,9 @@ public class Gym
 
     public async Task<Workout?> GetWorkoutByIdAsync(int id) =>
         await _workoutRepository.GetByIdAsync(id);
+    
+    public async Task<Workout?> GetWorkoutWithExercisesAsync(int id) =>
+        await _workoutRepository.GetByIdWithExercisesAsync(id);
 
     public async Task<Workout> CreateWorkoutAsync(string name) =>
         await _workoutRepository.CreateAsync(name);

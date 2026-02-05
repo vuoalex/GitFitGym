@@ -36,6 +36,38 @@ public class WorkoutRepository : IWorkoutRepository
             .FirstOrDefaultAsync();
     }
 
+    public async Task<Workout?> GetByIdWithExercisesAsync(int id)
+    {
+        await using var context = new AppDbContext();
+
+        var entity = await context.Workouts
+            .AsNoTracking()
+            .Include(w => w.WorkoutExercises)
+            .ThenInclude(we => we.Exercise)
+            .FirstOrDefaultAsync(w => w.Id == id);
+
+        if (entity is null) { return null; }
+
+        return new Workout
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            WorkoutExercises = entity.WorkoutExercises.Select(we => new WorkoutExercise
+            {
+                Id = we.Id,
+                WorkoutId = we.WorkoutId,
+                ExerciseId = we.ExerciseId,
+                Sets = we.Sets,
+                Reps = we.Reps,
+                Exercise = new Exercise
+                {
+                    Id = we.Exercise.Id,
+                    Name = we.Exercise.Name
+                }
+            }).ToList()
+        };
+    }
+
     public async Task<Workout> CreateAsync(string name)
     {
         await using var context = new AppDbContext();
