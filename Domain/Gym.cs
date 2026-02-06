@@ -1,5 +1,7 @@
+using GitFitGym.Data;
 using GitFitGym.Data.Repositories;
 using GitFitGym.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace GitFitGym.Domain;
 
@@ -91,7 +93,7 @@ public class Gym
 
     public async Task<Workout?> GetWorkoutByIdAsync(int id) =>
         await _workoutRepository.GetByIdAsync(id);
-    
+
     public async Task<Workout?> GetWorkoutWithExercisesAsync(int id) =>
         await _workoutRepository.GetByIdWithExercisesAsync(id);
 
@@ -132,6 +134,65 @@ public class Gym
 
     public async Task RemoveExerciseFromWorkoutAsync(int id) =>
         await _workoutExerciseRepository.DeleteAsync(id);
+
+    #endregion
+
+    #region Statistics
+
+    public async Task<int> GetMemberCountAsync()
+    {
+        await using var context = new AppDbContext();
+        return await context.Members.CountAsync();
+    }
+
+    public async Task<int> GetTrainerCountAsync()
+    {
+        await using var context = new AppDbContext();
+        return await context.Trainers.CountAsync();
+    }
+
+    public async Task<decimal> GetTotalTrainerSalaryAsync()
+    {
+        await using var context = new AppDbContext();
+        return await context.Trainers.SumAsync(t => t.Salary);
+    }
+
+    public async Task<decimal> GetAverageTrainerSalaryAsync()
+    {
+        await using var context = new AppDbContext();
+        return await context.Trainers.AverageAsync(t => t.Salary);
+    }
+
+    public async Task<Dictionary<string, int>> GetMembersPerTrainerAsync()
+    {
+        await using var context = new AppDbContext();
+
+        var grouped = await context.Members
+            .AsNoTracking()
+            .Where(m => m.TrainerId != null)
+            .GroupBy(m => m.TrainerId)
+            .Select(g => new
+            {
+                TrainerId = g.Key,
+                Count = g.Count()
+            })
+            .ToListAsync();
+
+        var trainers = await context.Trainers.AsNoTracking().ToListAsync();
+
+        var result = new Dictionary<string, int>();
+
+        foreach (var group in grouped)
+        {
+            var trainer = trainers.FirstOrDefault(t => t.Id == group.TrainerId);
+            var name = trainer != null
+                ? $"{trainer.Id} | {trainer.FirstName} {trainer.LastName}"
+                : "Unknown";
+            result[name] = group.Count;
+        }
+
+        return result;
+    }
 
     #endregion
 }
