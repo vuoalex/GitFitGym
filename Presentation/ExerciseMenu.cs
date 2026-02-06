@@ -50,6 +50,9 @@ public class ExerciseMenu(Gym gym)
 
     private async Task ViewAllExercisesAsync()
     {
+        Console.Clear();
+        Console.WriteLine("=== All Exercises ===\n");
+        
         var exercises = await _gym.GetAllExercisesAsync();
 
         if (exercises.Count == 0)
@@ -106,6 +109,7 @@ public class ExerciseMenu(Gym gym)
         try
         {
             var exercise = await _gym.CreateExerciseAsync(name);
+            Console.WriteLine($"\nExercise created with ID: {exercise.Id}");
         }
         catch (Exception ex)
         {
