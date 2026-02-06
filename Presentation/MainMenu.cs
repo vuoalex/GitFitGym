@@ -40,7 +40,7 @@ public class MainMenu(Gym gym)
                     await new WorkoutMenu(_gym).ShowAsync();
                     break;
                 case "5":
-                    // Exercise menu
+                    await new ExerciseMenu(_gym).ShowAsync();
                     break;
                 case "0":
                     Console.WriteLine("\nGoodbye!");
