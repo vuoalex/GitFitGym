@@ -19,6 +19,7 @@ public class MainMenu(Gym gym)
             Console.WriteLine("║  3. Membership Plans   ║");
             Console.WriteLine("║  4. Workouts           ║");
             Console.WriteLine("║  5. Exercises          ║");
+            Console.WriteLine("║  6. Statistics         ║");
             Console.WriteLine("║  0. Exit               ║");
             Console.WriteLine("╚════════════════════════╝");
             Console.Write("\nSelect an option: ");
