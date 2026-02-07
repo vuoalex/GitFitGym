@@ -161,6 +161,10 @@ public class Gym
     public async Task<decimal> GetAverageTrainerSalaryAsync()
     {
         await using var context = new AppDbContext();
+        
+        var count = await context.Trainers.CountAsync();
+        if (count == 0) { return 0; }
+        
         return await context.Trainers.AverageAsync(t => t.Salary);
     }
 
