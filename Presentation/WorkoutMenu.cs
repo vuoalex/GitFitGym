@@ -236,7 +236,7 @@ public class WorkoutMenu(Gym gym)
         Console.Write("Are you sure? (y/n): ");
         var confirm = Console.ReadLine()?.ToLower();
 
-        if (confirm == "n")
+        if (confirm != "y")
         {
             Console.WriteLine("Cancelled.");
             MainMenu.Pause();
@@ -283,7 +283,7 @@ public class WorkoutMenu(Gym gym)
         Console.Write("Are you sure? (y/n): ");
         var confirm = Console.ReadLine()?.ToLower();
 
-        if (confirm == "n")
+        if (confirm != "y")
         {
             Console.WriteLine("Cancelled.");
             MainMenu.Pause();

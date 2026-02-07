@@ -146,7 +146,7 @@ public class ExerciseMenu(Gym gym)
         Console.Write("Are you sure? (y/n): ");
         var confirm = Console.ReadLine()?.ToLower();
 
-        if (confirm == "n")
+        if (confirm != "y")
         {
             Console.WriteLine("Cancelled.");
             MainMenu.Pause();
@@ -156,7 +156,7 @@ public class ExerciseMenu(Gym gym)
         try
         {
             await _gym.DeleteExerciseAsync(id);
-            Console.WriteLine("Exercise deleted.");
+            Console.WriteLine("\nExercise deleted.");
         }
         catch (Exception ex)
         {

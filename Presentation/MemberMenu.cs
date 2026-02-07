@@ -262,7 +262,7 @@ public class MemberMenu(Gym gym)
         Console.Write("Are you sure? (y/n): ");
         var confirm = Console.ReadLine()?.ToLower();
 
-        if (confirm == "n")
+        if (confirm != "y")
         {
             Console.WriteLine("Cancelled.");
             MainMenu.Pause();
@@ -312,7 +312,7 @@ public class MemberMenu(Gym gym)
         Console.WriteLine("\nAvailable trainers:");
         foreach (var trainer in trainers)
         {
-            Console.WriteLine($"ID: {trainer.Id} | {trainer.FirstName} {trainer.LastName}");
+            Console.WriteLine($"  ID: {trainer.Id} | {trainer.FirstName} {trainer.LastName}");
         }
 
         Console.Write("\nEnter trainer ID (0 to remove): ");

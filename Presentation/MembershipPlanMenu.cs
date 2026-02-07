@@ -51,7 +51,7 @@ public class MembershipPlanMenu(Gym gym)
     private async Task ViewAllPlansAsync()
     {
         Console.Clear();
-        Console.WriteLine("=== All Membership Plans ===");
+        Console.WriteLine("=== All Membership Plans ===\n");
 
         var plans = await _gym.GetAllMembershipPlansAsync();
 
@@ -165,7 +165,7 @@ public class MembershipPlanMenu(Gym gym)
         Console.Write("Are you sure? (y/n): ");
         var confirm = Console.ReadLine()?.ToLower();
 
-        if (confirm == "n")
+        if (confirm != "y")
         {
             Console.WriteLine("Cancelled.");
             MainMenu.Pause();
