@@ -11,17 +11,18 @@ public class MemberMenu(Gym gym)
         while (true)
         {
             Console.Clear();
-            Console.WriteLine("╔════════════════════════╗");
-            Console.WriteLine("║        Members         ║");
-            Console.WriteLine("╠════════════════════════╣");
-            Console.WriteLine("║  1. View all members   ║");
-            Console.WriteLine("║  2. View member        ║");
-            Console.WriteLine("║  3. Add member         ║");
-            Console.WriteLine("║  4. Edit member        ║");
-            Console.WriteLine("║  5. Delete member      ║");
-            Console.WriteLine("║  6. Assign trainer     ║");
-            Console.WriteLine("║  0. Back               ║");
-            Console.WriteLine("╚════════════════════════╝");
+            Console.WriteLine("╔══════════════════════════════╗");
+            Console.WriteLine("║          Members             ║");
+            Console.WriteLine("╠══════════════════════════════╣");
+            Console.WriteLine("║  1. View all members         ║");
+            Console.WriteLine("║  2. View member              ║");
+            Console.WriteLine("║  3. Add member               ║");
+            Console.WriteLine("║  4. Register + purchase plan ║");
+            Console.WriteLine("║  5. Edit member              ║");
+            Console.WriteLine("║  6. Delete member            ║");
+            Console.WriteLine("║  7. Assign trainer           ║");
+            Console.WriteLine("║  0. Back                     ║");
+            Console.WriteLine("╚══════════════════════════════╝");
             Console.Write("\nSelect an option: ");
 
             var input = Console.ReadLine();
@@ -38,18 +39,21 @@ public class MemberMenu(Gym gym)
                     await AddMemberAsync();
                     break;
                 case "4":
-                    await EditMemberAsync();
+                    await RegisterMemberWithPurchaseAsync();
                     break;
                 case "5":
-                    await DeleteMemberAsync();
+                    await EditMemberAsync();
                     break;
                 case "6":
+                    await DeleteMemberAsync();
+                    break;
+                case "7":
                     await AssignTrainerAsync();
                     break;
                 case "0":
                     return;
                 default:
-                    Console.WriteLine("Invalid option, try again. ");
+                    Console.WriteLine("Invalid option, try again.");
                     MainMenu.Pause();
                     break;
             }
@@ -127,6 +131,49 @@ public class MemberMenu(Gym gym)
         {
             var member = await _gym.CreateMemberAsync(firstName, lastName, email);
             Console.WriteLine($"\nMember created with ID: {member.Id}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"\nError: {ex.Message}");
+        }
+
+        MainMenu.Pause();
+    }
+
+    private async Task RegisterMemberWithPurchaseAsync()
+    {
+        Console.Clear();
+        Console.WriteLine("=== Register + Purchase Plan ===\n");
+
+        Console.Write("First name: ");
+        var firstName = Console.ReadLine() ?? "";
+
+        Console.Write("Last name: ");
+        var lastName = Console.ReadLine() ?? "";
+
+        Console.Write("Email: ");
+        var email = Console.ReadLine() ?? "";
+
+        var plans = await _gym.GetAllMembershipPlansAsync();
+
+        Console.WriteLine("\nAvailable membership plans:");
+        foreach (var p in plans)
+        {
+            Console.WriteLine($"  ID: {p.Id} | {p.Name} | {p.DurationDays} days | {p.Price:C}");
+        }
+
+        Console.Write("\nEnter plan ID: ");
+        if (!int.TryParse(Console.ReadLine(), out var planId))
+        {
+            Console.WriteLine("Invalid ID.");
+            MainMenu.Pause();
+            return;
+        }
+
+        try
+        {
+            var member = await _gym.RegisterMemberWithPurchaseAsync(firstName, lastName, email, planId);
+            Console.WriteLine($"\nMember registered with ID: {member.Id} and membership activated!");
         }
         catch (Exception ex)
         {

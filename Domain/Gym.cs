@@ -1,5 +1,6 @@
 using GitFitGym.Data;
 using GitFitGym.Data.Repositories;
+using GitFitGym.Data.Entities;
 using GitFitGym.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -192,6 +193,77 @@ public class Gym
         }
 
         return result;
+    }
+
+    #endregion
+
+    #region Transactions
+
+    public async Task<Member> RegisterMemberWithPurchaseAsync(
+        string firstName,
+        string lastName,
+        string email,
+        int membershipPlanId)
+    {
+        await using var context = new AppDbContext();
+        await using var transaction = await context.Database.BeginTransactionAsync();
+
+        try
+        {
+            var existingMember = await context.Members
+                .FirstOrDefaultAsync(m => m.Email == email);
+
+            if (existingMember is not null)
+            {
+                throw new Exception("Email already exists!");
+            }
+
+            var memberEntity = new MemberEntity
+            {
+                FirstName = firstName.Trim(),
+                LastName = lastName.Trim(),
+                Email = email.Trim()
+            };
+
+            context.Members.Add(memberEntity);
+            await context.SaveChangesAsync();
+
+            var plan = await context.MembershipPlans.FindAsync(membershipPlanId);
+            if (plan is null)
+            {
+                throw new Exception("Membership plan not found!");
+            }
+
+            var membershipEntity = new MembershipEntity
+            {
+                MemberId = memberEntity.Id,
+                MembershipPlanId = membershipPlanId,
+                StartDate = DateTime.UtcNow,
+                EndDate = plan.DurationDays > 0
+                    ? DateTime.UtcNow.AddDays(plan.DurationDays)
+                    : null,
+                Status = MembershipStatus.Active
+            };
+
+            context.Memberships.Add(membershipEntity);
+            await context.SaveChangesAsync();
+
+            await transaction.CommitAsync();
+
+            return new Member
+            {
+                Id = memberEntity.Id,
+                FirstName = memberEntity.FirstName,
+                LastName = memberEntity.LastName,
+                Email = memberEntity.Email,
+                JoinedAt = memberEntity.JoinedAt
+            };
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
     }
 
     #endregion
