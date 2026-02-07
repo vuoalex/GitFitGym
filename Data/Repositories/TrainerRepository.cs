@@ -46,6 +46,13 @@ public class TrainerRepository : ITrainerRepository
 
     public async Task<Trainer> CreateAsync(string firstName, string lastName, string email, decimal salary)
     {
+        if (string.IsNullOrWhiteSpace(firstName) ||
+            string.IsNullOrWhiteSpace(lastName) ||
+            string.IsNullOrWhiteSpace(email))
+        {
+            throw new Exception("First name, Last name and Email cannot be empty!");
+        }
+
         await using var context = new AppDbContext();
 
         var existingTrainer = await context.Trainers

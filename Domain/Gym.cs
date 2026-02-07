@@ -205,6 +205,13 @@ public class Gym
         string email,
         int membershipPlanId)
     {
+        if (string.IsNullOrWhiteSpace(firstName) ||
+            string.IsNullOrWhiteSpace(lastName) ||
+            string.IsNullOrWhiteSpace(email))
+        {
+            throw new Exception("First name, Last name and Email cannot be empty!");
+        }
+
         await using var context = new AppDbContext();
         await using var transaction = await context.Database.BeginTransactionAsync();
 

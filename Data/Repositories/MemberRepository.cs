@@ -46,6 +46,13 @@ public class MemberRepository : IMemberRepository
 
     public async Task<Member> CreateAsync(string firstName, string lastName, string email, int? trainerId)
     {
+        if (string.IsNullOrWhiteSpace(firstName) ||
+            string.IsNullOrWhiteSpace(lastName) ||
+            string.IsNullOrWhiteSpace(email))
+        {
+            throw new Exception("First name, Last name and Email cannot be empty!");
+        }
+
         await using var context = new AppDbContext();
 
         var existingAccount = await context.Members
