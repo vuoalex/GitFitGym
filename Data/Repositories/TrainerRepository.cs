@@ -67,7 +67,7 @@ public class TrainerRepository : ITrainerRepository
         {
             FirstName = firstName.Trim(),
             LastName = lastName.Trim(),
-            Email = email,
+            Email = email.Trim(),
             Salary = salary < 0m ? 0m : salary
         };
 

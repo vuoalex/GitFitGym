@@ -46,7 +46,10 @@ public class WorkoutRepository : IWorkoutRepository
             .ThenInclude(we => we.Exercise)
             .FirstOrDefaultAsync(w => w.Id == id);
 
-        if (entity is null) { return null; }
+        if (entity is null)
+        {
+            return null;
+        }
 
         return new Workout
         {
@@ -70,6 +73,11 @@ public class WorkoutRepository : IWorkoutRepository
 
     public async Task<Workout> CreateAsync(string name)
     {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new Exception("Workout name cannot be empty!");
+        }
+
         await using var context = new AppDbContext();
 
         var existingWorkout = await context.Workouts

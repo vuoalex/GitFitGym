@@ -38,8 +38,13 @@ public class ExerciseRepository : IExerciseRepository
 
     public async Task<Exercise> CreateAsync(string name)
     {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new Exception("Exercise name cannot be empty!");
+        }
+
         await using var context = new AppDbContext();
-        
+
         var existingExercise = await context.Exercises
             .FirstOrDefaultAsync(x => x.Name == name);
 
@@ -52,9 +57,9 @@ public class ExerciseRepository : IExerciseRepository
         {
             Name = name.Trim()
         };
-        
-        await context.Exercises.AddAsync(newExercise);
-        
+
+        context.Exercises.Add(newExercise);
+
         await context.SaveChangesAsync();
 
         return new Exercise
@@ -67,16 +72,16 @@ public class ExerciseRepository : IExerciseRepository
     public async Task DeleteAsync(int id)
     {
         await using var context = new AppDbContext();
-        
+
         var exerciseToDelete = await context.Exercises.FindAsync(id);
 
         if (exerciseToDelete is null)
         {
             throw new Exception("Exercise not found!");
         }
-        
+
         context.Exercises.Remove(exerciseToDelete);
-        
+
         await context.SaveChangesAsync();
     }
 }

@@ -42,6 +42,11 @@ public class MembershipPlanRepository : IMembershipPlanRepository
 
     public async Task<MembershipPlan> CreateAsync(string name, int durationDays, decimal price)
     {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new Exception("Plan name cannot be empty!");
+        }
+
         await using var context = new AppDbContext();
 
         var existingPlan = await context.MembershipPlans

@@ -67,7 +67,7 @@ public class MemberRepository : IMemberRepository
         {
             FirstName = firstName.Trim(),
             LastName = lastName.Trim(),
-            Email = email,
+            Email = email.Trim(),
             TrainerId = trainerId
         };
 
